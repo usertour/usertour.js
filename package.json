@@ -11,7 +11,9 @@
   "scripts": {
     "build": "rm -rf dist/ && rollup -c rollup.config.js",
     "prepublishOnly": "npm run test && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "pub": "npm run updateVersion && npm publish",
+    "updateVersion": "npm version patch"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
@@ -39,5 +41,9 @@
       "ts",
       "js"
     ]
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }

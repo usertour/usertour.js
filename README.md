@@ -1,4 +1,4 @@
-# Ahamoment.js
+# Usertour.js
 
 ## Installation
 
@@ -14,10 +14,10 @@ npm install usertour.js@latest
 import usertour from 'usertour.js'
 
 var options = {
-    userInfo: {
-        id: "USER_ID",
-        name: "USER_NAME",
-    }
-};
-usertour.init("ENV_ID", options);
+  userInfo: {
+    id: 'USER_ID',
+    name: 'USER_NAME'
+  }
+}
+usertour.init('ENV_ID', options)
 ```
