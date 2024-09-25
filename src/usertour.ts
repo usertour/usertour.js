@@ -67,12 +67,11 @@ if (!usertour) {
           if (browserTarget === 'es2020') {
             script.type = 'module'
             script.src =
-              envVars.USERTOURJS_ES2020_URL ||
-              urlPrefix + 'latest/es2020/usertour.js'
+              envVars.USERTOURJS_ES2020_URL || urlPrefix + 'es2020/usertour.js'
           } else {
             script.src =
               envVars.USERTOURJS_LEGACY_URL ||
-              urlPrefix + 'latest/legacy/usertour.js'
+              urlPrefix + 'legacy/usertour.iife.js'
           }
           script.onload = function () {
             resolve()
