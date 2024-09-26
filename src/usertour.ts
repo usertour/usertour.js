@@ -169,9 +169,11 @@ interface Deferred {
 var w: WindowWithUsertour = typeof window === 'undefined' ? ({} as any) : window
 var usertour = w.usertour
 
+console.log('enter npm backage, usertour:', usertour)
 if (!usertour) {
   //
   var urlPrefix = 'https://js.usertour.io/'
+  console.log('enter npm backage: ', urlPrefix)
 
   // Initialize as an empty object (methods will be stubbed below)
   var loadPromise: Promise<void> | null = null
