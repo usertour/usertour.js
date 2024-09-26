@@ -150,16 +150,16 @@ export interface ResourceCenterState {
   unreadAnnouncementCount: number
 }
 
-interface ScrollPadding {
-  top?: number
-  right?: number
-  bottom?: number
-  left?: number
-}
+// interface ScrollPadding {
+//   top?: number
+//   right?: number
+//   bottom?: number
+//   left?: number
+// }
 
-type StringFilter = ((className: string) => boolean) | RegExp
+// type StringFilter = ((className: string) => boolean) | RegExp
 
-type StringFilters = StringFilter | StringFilter[]
+// type StringFilters = StringFilter | StringFilter[]
 
 interface Deferred {
   resolve: () => void
