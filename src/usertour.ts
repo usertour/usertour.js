@@ -58,43 +58,43 @@ export interface Usertour {
   // eslint-disable-next-line es5/no-rest-parameters
   off(eventName: string, listener: (...args: any[]) => void): void
 
-  // setCustomInputSelector(customInputSelector: string | null): void
+  setCustomInputSelector(customInputSelector: string | null): void
 
-  // registerCustomInput(
-  //   cssSelector: string,
-  //   getValue?: (el: Element) => string
-  // ): void
+  registerCustomInput(
+    cssSelector: string,
+    getValue?: (el: Element) => string
+  ): void
 
-  // setCustomNavigate(customNavigate: ((url: string) => void) | null): void
+  setCustomNavigate(customNavigate: ((url: string) => void) | null): void
 
-  // setUrlFilter(urlFilter: ((url: string) => string) | null): void
+  setUrlFilter(urlFilter: ((url: string) => string) | null): void
 
-  // setLinkUrlDecorator(linkUrlDecorator: ((url: string) => string) | null): void
+  setLinkUrlDecorator(linkUrlDecorator: ((url: string) => string) | null): void
 
-  // setInferenceAttributeNames(attributeNames: string[]): void
+  setInferenceAttributeNames(attributeNames: string[]): void
 
-  // setInferenceAttributeFilter(
-  //   attributeName: string,
-  //   filters: StringFilters
-  // ): void
+  setInferenceAttributeFilter(
+    attributeName: string,
+    filters: StringFilters
+  ): void
 
-  // setInferenceClassNameFilter(filters: StringFilters): void
+  setInferenceClassNameFilter(filters: StringFilters): void
 
-  // setScrollPadding(scrollPadding: ScrollPadding | null): void
+  setScrollPadding(scrollPadding: ScrollPadding | null): void
 
-  // setCustomScrollIntoView(scrollIntoView: ((el: Element) => void) | null): void
+  setCustomScrollIntoView(scrollIntoView: ((el: Element) => void) | null): void
 
-  // _setTargetEnv(targetEnv: unknown): void
+  _setTargetEnv(targetEnv: unknown): void
 
-  // setShadowDomEnabled(shadowDomEnabled: boolean): void
+  setShadowDomEnabled(shadowDomEnabled: boolean): void
 
-  // setPageTrackingDisabled(pageTrackingDisabled: boolean): void
+  setPageTrackingDisabled(pageTrackingDisabled: boolean): void
 
-  // setBaseZIndex(baseZIndex: number): void
+  setBaseZIndex(baseZIndex: number): void
 
-  // setServerEndpoint(serverEndpoint: string | null | undefined): void
+  setServerEndpoint(serverEndpoint: string | null | undefined): void
 
-  // disableEvalJs(): void
+  disableEvalJs(): void
 }
 
 export interface Attributes {
@@ -150,16 +150,16 @@ export interface ResourceCenterState {
   unreadAnnouncementCount: number
 }
 
-// interface ScrollPadding {
-//   top?: number
-//   right?: number
-//   bottom?: number
-//   left?: number
-// }
+interface ScrollPadding {
+  top?: number
+  right?: number
+  bottom?: number
+  left?: number
+}
 
-// type StringFilter = ((className: string) => boolean) | RegExp
+type StringFilter = ((className: string) => boolean) | RegExp
 
-// type StringFilters = StringFilter | StringFilter[]
+type StringFilters = StringFilter | StringFilter[]
 
 interface Deferred {
   resolve: () => void
@@ -271,19 +271,19 @@ if (!usertour) {
   stubVoid('off')
   stubVoid('on')
   stubVoid('reset')
-  // stubVoid('setBaseZIndex')
-  // stubVoid('setCustomInputSelector')
-  // stubVoid('setCustomNavigate')
-  // stubVoid('setCustomScrollIntoView')
-  // stubVoid('setInferenceAttributeFilter')
-  // stubVoid('setInferenceAttributeNames')
-  // stubVoid('setInferenceClassNameFilter')
-  // stubVoid('setScrollPadding')
-  // stubVoid('setServerEndpoint')
-  // stubVoid('setShadowDomEnabled')
-  // stubVoid('setPageTrackingDisabled')
-  // stubVoid('setUrlFilter')
-  // stubVoid('setLinkUrlDecorator')
+  stubVoid('setBaseZIndex')
+  stubVoid('setCustomInputSelector')
+  stubVoid('setCustomNavigate')
+  stubVoid('setCustomScrollIntoView')
+  stubVoid('setInferenceAttributeFilter')
+  stubVoid('setInferenceAttributeNames')
+  stubVoid('setInferenceClassNameFilter')
+  stubVoid('setScrollPadding')
+  stubVoid('setServerEndpoint')
+  stubVoid('setShadowDomEnabled')
+  stubVoid('setPageTrackingDisabled')
+  stubVoid('setUrlFilter')
+  stubVoid('setLinkUrlDecorator')
 
   // Methods that return promises and should be queued
   stubPromise('endAll')
