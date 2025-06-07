@@ -92,6 +92,10 @@ export interface Usertour {
 
   setBaseZIndex(baseZIndex: number): void
 
+  setSessionTimeout(hours: number): void
+
+  setTargetMissingSeconds(seconds: number): void
+
   setServerEndpoint(serverEndpoint: string | null | undefined): void
 
   disableEvalJs(): void
@@ -272,6 +276,8 @@ if (!usertour) {
   stubVoid('on')
   stubVoid('reset')
   stubVoid('setBaseZIndex')
+  stubVoid('setSessionTimeout')
+  stubVoid('setTargetMissingSeconds')
   stubVoid('setCustomInputSelector')
   stubVoid('setCustomNavigate')
   stubVoid('setCustomScrollIntoView')
