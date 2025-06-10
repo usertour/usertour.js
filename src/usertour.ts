@@ -46,6 +46,8 @@ export interface Usertour {
 
   start: (contentId: string, opts?: StartOptions) => Promise<void>
 
+  isStarted: (contentId: string) => boolean
+
   endAll: () => Promise<void>
 
   reset: () => void
@@ -145,6 +147,7 @@ export interface TrackOptions {
 
 export interface StartOptions {
   once?: boolean
+  continue?: boolean
 }
 
 export interface ResourceCenterState {
@@ -261,7 +264,7 @@ if (!usertour) {
   // therefore must support using a default callback until Usertour.js is
   // loaded.
   var stubDefault = function (
-    method: ConditionalKeys<Usertour, () => any>,
+    method: ConditionalKeys<Usertour, (...args: any[]) => any>,
     returnValue: any
   ) {
     // @ts-ignore
@@ -304,6 +307,7 @@ if (!usertour) {
   // Methods that synchronously return and can be stubbed with default return
   // values and are not queued
   stubDefault('isIdentified', false)
+  stubDefault('isStarted',  false)
 }
 
 export default usertour!
