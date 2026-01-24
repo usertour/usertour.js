@@ -271,6 +271,7 @@ if (!usertour) {
   }
 
   // Methods that return void and should be queued
+  stubVoid('disableEvalJs')
   stubVoid('init')
   stubVoid('off')
   stubVoid('on')
