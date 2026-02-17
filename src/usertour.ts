@@ -275,6 +275,7 @@ if (!usertour) {
   stubVoid('init')
   stubVoid('off')
   stubVoid('on')
+  stubVoid('registerCustomInput')
   stubVoid('reset')
   stubVoid('setBaseZIndex')
   stubVoid('setSessionTimeout')
@@ -305,7 +306,7 @@ if (!usertour) {
   // Methods that synchronously return and can be stubbed with default return
   // values and are not queued
   stubDefault('isIdentified', false)
-  stubDefault('isStarted',  false)
+  stubDefault('isStarted', false)
 }
 
 export default usertour!
