@@ -50,6 +50,16 @@ export interface Usertour {
 
   endAll: () => Promise<void>
 
+  openResourceCenter: () => void
+
+  closeResourceCenter: () => void
+
+  toggleResourceCenter: () => void
+
+  setResourceCenterLauncherHidden: (hidden: boolean) => void
+
+  getResourceCenterState: () => ResourceCenterState | null
+
   reset: () => void
 
   remount: () => void
@@ -292,6 +302,10 @@ if (!usertour) {
   stubVoid('setPageTrackingDisabled')
   stubVoid('setUrlFilter')
   stubVoid('setLinkUrlDecorator')
+  stubVoid('openResourceCenter')
+  stubVoid('closeResourceCenter')
+  stubVoid('toggleResourceCenter')
+  stubVoid('setResourceCenterLauncherHidden')
 
   // Methods that return promises and should be queued
   stubPromise('endAll')
@@ -306,6 +320,7 @@ if (!usertour) {
   // Methods that synchronously return and can be stubbed with default return
   // values and are not queued
   stubDefault('isIdentified', false)
+  stubDefault('getResourceCenterState', null)
   stubDefault('isStarted', false)
 }
 
