@@ -56,9 +56,11 @@ export interface Usertour {
 
   toggleResourceCenter: () => void
 
-  setResourceCenterLauncherHidden: (hidden: boolean) => void
+  showResourceCenterLauncher: () => void
 
-  getResourceCenterState: () => ResourceCenterState | null
+  hideResourceCenterLauncher: () => void
+
+  isResourceCenterOpen: () => boolean
 
   reset: () => void
 
@@ -160,12 +162,6 @@ export interface StartOptions {
   continue?: boolean
 }
 
-export interface ResourceCenterState {
-  isOpen: boolean
-  hasChecklist: boolean
-  uncompletedChecklistTaskCount: number
-  unreadAnnouncementCount: number
-}
 
 interface ScrollPadding {
   top?: number
@@ -305,7 +301,8 @@ if (!usertour) {
   stubVoid('openResourceCenter')
   stubVoid('closeResourceCenter')
   stubVoid('toggleResourceCenter')
-  stubVoid('setResourceCenterLauncherHidden')
+  stubVoid('showResourceCenterLauncher')
+  stubVoid('hideResourceCenterLauncher')
 
   // Methods that return promises and should be queued
   stubPromise('endAll')
@@ -320,7 +317,7 @@ if (!usertour) {
   // Methods that synchronously return and can be stubbed with default return
   // values and are not queued
   stubDefault('isIdentified', false)
-  stubDefault('getResourceCenterState', null)
+  stubDefault('isResourceCenterOpen', false)
   stubDefault('isStarted', false)
 }
 
