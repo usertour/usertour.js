@@ -72,6 +72,9 @@ export interface Usertour {
   // eslint-disable-next-line es5/no-rest-parameters
   off(eventName: string, listener: (...args: any[]) => void): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged). Use `registerCustomInput(cssSelector, getValue)` instead.
+   */
   setCustomInputSelector(customInputSelector: string | null): void
 
   registerCustomInput(
@@ -85,31 +88,55 @@ export interface Usertour {
 
   setLinkUrlDecorator(linkUrlDecorator: ((url: string) => string) | null): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setInferenceAttributeNames(attributeNames: string[]): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setInferenceAttributeFilter(
     attributeName: string,
     filters: StringFilters
   ): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setInferenceClassNameFilter(filters: StringFilters): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged). To control scrolling behavior, use `setCustomScrollIntoView(fn)` instead.
+   */
   setScrollPadding(scrollPadding: ScrollPadding | null): void
 
   setCustomScrollIntoView(scrollIntoView: ((el: Element) => void) | null): void
 
   _setTargetEnv(targetEnv: unknown): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setShadowDomEnabled(shadowDomEnabled: boolean): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setPageTrackingDisabled(pageTrackingDisabled: boolean): void
 
   setBaseZIndex(baseZIndex: number): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
+   */
   setSessionTimeout(hours: number): void
 
   setTargetMissingSeconds(seconds: number): void
 
+  /**
+   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged). For a self-hosted backend set `window.USERTOURJS_ENV_VARS.WS_URI` before the SDK loads instead.
+   */
   setServerEndpoint(serverEndpoint: string | null | undefined): void
 
   disableEvalJs(): void
