@@ -303,6 +303,21 @@ if (!usertour) {
     }
   }
 
+  // Helper to stub legacy methods the current SDK does not implement. These
+  // must NOT queue: the SDK-side queue drain dispatches each entry to whatever
+  // hangs on window.usertour under that name, and on older SDK bundles the
+  // leftover queueing stub survives the API merge — so a queued call to an
+  // unimplemented method re-enqueued itself from inside the drain loop,
+  // spinning the main thread and growing the queue until the tab ran out of
+  // memory. Warning and dropping the call here keeps every loader/bundle
+  // version combination safe.
+  var stubUnsupported = function (method: keyof Usertour) {
+    // @ts-ignore
+    usertour![method] = function () {
+      console.warn('usertour.js: ' + method + ' is not supported and was ignored')
+    } as any
+  }
+
   // Methods that return void and should be queued
   stubVoid('disableEvalJs')
   stubVoid('init')
@@ -311,18 +326,9 @@ if (!usertour) {
   stubVoid('registerCustomInput')
   stubVoid('reset')
   stubVoid('setBaseZIndex')
-  stubVoid('setSessionTimeout')
   stubVoid('setTargetMissingSeconds')
-  stubVoid('setCustomInputSelector')
   stubVoid('setCustomNavigate')
   stubVoid('setCustomScrollIntoView')
-  stubVoid('setInferenceAttributeFilter')
-  stubVoid('setInferenceAttributeNames')
-  stubVoid('setInferenceClassNameFilter')
-  stubVoid('setScrollPadding')
-  stubVoid('setServerEndpoint')
-  stubVoid('setShadowDomEnabled')
-  stubVoid('setPageTrackingDisabled')
   stubVoid('setUrlFilter')
   stubVoid('setLinkUrlDecorator')
   stubVoid('openResourceCenter')
@@ -330,6 +336,18 @@ if (!usertour) {
   stubVoid('toggleResourceCenter')
   stubVoid('showResourceCenterLauncher')
   stubVoid('hideResourceCenterLauncher')
+
+  // Legacy methods with no implementation in the current SDK (also marked
+  // @deprecated on the interface): warn-and-drop instead of queueing.
+  stubUnsupported('setCustomInputSelector')
+  stubUnsupported('setSessionTimeout')
+  stubUnsupported('setInferenceAttributeFilter')
+  stubUnsupported('setInferenceAttributeNames')
+  stubUnsupported('setInferenceClassNameFilter')
+  stubUnsupported('setScrollPadding')
+  stubUnsupported('setServerEndpoint')
+  stubUnsupported('setShadowDomEnabled')
+  stubUnsupported('setPageTrackingDisabled')
 
   // Methods that return promises and should be queued
   stubPromise('endAll')
