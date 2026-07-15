@@ -163,10 +163,29 @@ interface AttributeChange {
 type AttributeDataType = 'string' | 'boolean' | 'number' | 'datetime' | 'list'
 
 export type IdentifyOptions = {
+  /**
+   * Identity token: a JWT minted by your backend, HS256-signed with your
+   * environment's signing secret — { sub: userId, companyId?, exp? }.
+   * See https://docs.usertour.io/developers/identity-verification
+   */
+  token?: string
+  /**
+   * @deprecated Never had any effect (identity verification shipped with
+   * JWT identity tokens instead). Use `token`.
+   */
   signature?: string
 }
 
 export interface GroupOptions {
+  /**
+   * Identity token whose companyId claim must match this group() call.
+   * Supersedes the token supplied to identify().
+   */
+  token?: string
+  /**
+   * @deprecated Never had any effect (identity verification shipped with
+   * JWT identity tokens instead). Use `token`.
+   */
   signature?: string
   membership?: Attributes
 }
