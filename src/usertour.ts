@@ -21,6 +21,11 @@ export interface Usertour {
     opts?: IdentifyOptions
   ) => Promise<void>
 
+  /**
+   * @param opts - Deprecated: anonymous identities cannot carry an identity
+   * token (your backend never sees the SDK-generated anonymous id, so it can
+   * never sign one). This parameter has no effect.
+   */
   identifyAnonymous: (
     attributes?: Attributes,
     opts?: IdentifyOptions
