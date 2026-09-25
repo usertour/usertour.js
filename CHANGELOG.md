@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+- Attribute write operations are now typed as they are implemented (a server
+  newer than v0.9.5): a value is a literal, `null` (remove), a `Date`, or exactly one
+  operation object — `{set}`, `{set_once}`, `{add}`, `{union}`, `{remove}`;
+  `set` / `set_once` may carry `data_type`, which pins the type of a
+  definition being created and never retypes an existing one. `add` takes a
+  number only. Event attributes take a literal, a `Date`, or `{set, data_type}`.
+- `subtract`, `append` and `prepend` are `@deprecated`:
+  the SDK rewrites them to `add` / `union` with a console warning.
+- `identifyAnonymous`'s `opts` parameter is documented as having no effect
+  (anonymous ids are minted client-side, so a backend can never sign one).
+
 ## [v0.0.23]
 
 - The nine `@deprecated` legacy methods no longer queue their calls for the
