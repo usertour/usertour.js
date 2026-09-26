@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- `identify`, `identifyAnonymous`, `updateUser`, `group` and `updateGroup` now resolve to `{ rejected }` (`AttributesWriteResult`): the attributes the server refused, each with a reason — a value that does not fit the attribute's type, or a system-generated attribute such as a Random A/B or Random number attribute (a server newer than v0.9.5). Every other attribute was written; the SDK also logs a warning per refused attribute. A call queued before the SDK loads resolves to the same result.
 - `usertour.setDebug(enabled)` turns the SDK's console logging on or off (off by default; remembered across page loads until switched off). A call placed before the script has loaded is queued and applied on load.
 - Attribute write operations are now typed as they are implemented (a server newer than v0.9.5): a value is a literal, `null` (remove), a `Date`, or exactly one operation object — `{set}`, `{set_once}`, `{add}`, `{union}`, `{remove}`; `set` / `set_once` may carry `data_type`, which pins the type of a definition being created and never retypes an existing one. `add` takes a number only. Event attributes take a literal, a `Date`, or `{set, data_type}`.
 - `subtract`, `append` and `prepend` are `@deprecated`: the SDK rewrites them to `add` / `union` with a console warning.

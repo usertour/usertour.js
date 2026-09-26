@@ -19,7 +19,7 @@ export interface Usertour {
     userId: string,
     attributes?: Attributes,
     opts?: IdentifyOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
   /**
    * @param opts - Deprecated: anonymous identities cannot carry an identity
@@ -29,17 +29,23 @@ export interface Usertour {
   identifyAnonymous: (
     attributes?: Attributes,
     opts?: IdentifyOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
-  updateUser: (attributes: Attributes, opts?: IdentifyOptions) => Promise<void>
+  updateUser: (
+    attributes: Attributes,
+    opts?: IdentifyOptions
+  ) => Promise<AttributesWriteResult>
 
   group: (
     groupId: string,
     attributes?: Attributes,
     opts?: GroupOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
-  updateGroup: (attributes: Attributes, opts?: GroupOptions) => Promise<void>
+  updateGroup: (
+    attributes: Attributes,
+    opts?: GroupOptions
+  ) => Promise<AttributesWriteResult>
 
   track(
     name: string,
@@ -238,6 +244,17 @@ interface LegacyAttributeChange {
   prepend?: AttributeLiteralOrList
 }
 
+/**
+ * What an identify / update call reports back: the write succeeded, and
+ * `rejected` names any attribute the server refused (a value that does not
+ * fit the attribute's type, an operation written incorrectly, a
+ * system-generated attribute) with the reason. Every other key was written.
+ * The SDK also logs a warning per refused attribute.
+ */
+export interface AttributesWriteResult {
+  rejected: Array<{codeName: string; reason: string}>
+}
+
 export type IdentifyOptions = {
   /**
    * Identity token: a JWT minted by your backend, HS256-signed with your
@@ -298,7 +315,7 @@ type StringFilter = ((className: string) => boolean) | RegExp
 type StringFilters = StringFilter | StringFilter[]
 
 interface Deferred {
-  resolve: () => void
+  resolve: (value?: any) => void
   reject: (e: any) => void
 }
 
@@ -368,17 +385,19 @@ if (!usertour) {
     } as any
   }
 
-  // Helper to stub promise-returning methods that should be queued
+  // Helper to stub promise-returning methods that should be queued. The
+  // promise settles with whatever the real method returns once the queue is
+  // replayed, so a queued identify() still resolves to its write result.
   var stubPromise = function (
     // eslint-disable-next-line es5/no-rest-parameters
-    method: ConditionalKeys<Usertour, (...args: any[]) => Promise<void>>
+    method: ConditionalKeys<Usertour, (...args: any[]) => Promise<any>>
   ) {
     // @ts-ignore
     usertour![method] = function () {
       var args = Array.prototype.slice.call(arguments)
       usertour!.load()
       var deferred: Deferred
-      var promise = new Promise<void>(function (resolve, reject) {
+      var promise = new Promise<any>(function (resolve, reject) {
         deferred = {resolve: resolve, reject: reject}
       })
       q.push([method, deferred!, args])
