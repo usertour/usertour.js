@@ -133,6 +133,13 @@ export interface Usertour {
   setBaseZIndex(baseZIndex: number): void
 
   /**
+   * Turn the SDK's console logging on or off. Off by default; effective at
+   * once and remembered for future page loads until switched off. The same
+   * gate opens for one page load with `?usertour_debug=1` in the URL.
+   */
+  setDebug(enabled: boolean): void
+
+  /**
    * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged).
    */
   setSessionTimeout(hours: number): void
@@ -417,6 +424,7 @@ if (!usertour) {
   stubVoid('registerCustomInput')
   stubVoid('reset')
   stubVoid('setBaseZIndex')
+  stubVoid('setDebug')
   stubVoid('setTargetMissingSeconds')
   stubVoid('setCustomNavigate')
   stubVoid('setCustomScrollIntoView')
