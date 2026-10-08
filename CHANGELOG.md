@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [v0.0.25]
 
 - On Usertour.js newer than v0.9.5 (Cloud always serves the newest bundle; self-hosted, it is the bundle your server serves), `identify`, `identifyAnonymous`, `updateUser`, `group` and `updateGroup` resolve to `{ rejected }` (`AttributesWriteResult`): the attributes the server refused, each with a reason — a value that does not fit the attribute's type, or a system-generated attribute such as a Random A/B or Random number attribute. Every other attribute was written; the SDK also logs a warning per refused attribute. A call queued before the SDK loads resolves to the same result. An older bundle still resolves these calls with `undefined`, so destructure the result only once your server runs a version newer than v0.9.5.
 - `usertour.setDebug(enabled)` turns the SDK's console logging on or off (off by default; remembered across page loads until switched off). A call placed before the script has loaded is queued and applied on load.
