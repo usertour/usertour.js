@@ -15,13 +15,20 @@ export interface Usertour {
 
   init: (token: string) => void
 
+  /**
+   * Resolves to {@link AttributesWriteResult} on Usertour.js newer than
+   * v0.9.5; an older bundle resolves with `undefined`.
+   */
   identify: (
     userId: string,
     attributes?: Attributes,
     opts?: IdentifyOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
   /**
+   * Resolves to {@link AttributesWriteResult} on Usertour.js newer than
+   * v0.9.5; an older bundle resolves with `undefined`.
+   *
    * @param opts - Deprecated: anonymous identities cannot carry an identity
    * token (your backend never sees the SDK-generated anonymous id, so it can
    * never sign one). This parameter has no effect.
@@ -29,17 +36,35 @@ export interface Usertour {
   identifyAnonymous: (
     attributes?: Attributes,
     opts?: IdentifyOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
-  updateUser: (attributes: Attributes, opts?: IdentifyOptions) => Promise<void>
+  /**
+   * Resolves to {@link AttributesWriteResult} on Usertour.js newer than
+   * v0.9.5; an older bundle resolves with `undefined`.
+   */
+  updateUser: (
+    attributes: Attributes,
+    opts?: IdentifyOptions
+  ) => Promise<AttributesWriteResult>
 
+  /**
+   * Resolves to {@link AttributesWriteResult} on Usertour.js newer than
+   * v0.9.5; an older bundle resolves with `undefined`.
+   */
   group: (
     groupId: string,
     attributes?: Attributes,
     opts?: GroupOptions
-  ) => Promise<void>
+  ) => Promise<AttributesWriteResult>
 
-  updateGroup: (attributes: Attributes, opts?: GroupOptions) => Promise<void>
+  /**
+   * Resolves to {@link AttributesWriteResult} on Usertour.js newer than
+   * v0.9.5; an older bundle resolves with `undefined`.
+   */
+  updateGroup: (
+    attributes: Attributes,
+    opts?: GroupOptions
+  ) => Promise<AttributesWriteResult>
 
   track(
     name: string,
@@ -187,6 +212,9 @@ type AttributeOperation =
       add?: never
       union?: never
       remove?: never
+      subtract?: never
+      append?: never
+      prepend?: never
     }
   | {
       /** Set the value only when the attribute has no value yet. */
@@ -196,6 +224,9 @@ type AttributeOperation =
       add?: never
       union?: never
       remove?: never
+      subtract?: never
+      append?: never
+      prepend?: never
     }
   | {
       /** Add to a Number attribute (negative to subtract); a missing value starts at 0. */
@@ -205,6 +236,9 @@ type AttributeOperation =
       union?: never
       remove?: never
       data_type?: never
+      subtract?: never
+      append?: never
+      prepend?: never
     }
   | {
       /** Append the value(s) not yet present to a List attribute; a missing list starts empty. */
@@ -214,6 +248,9 @@ type AttributeOperation =
       add?: never
       remove?: never
       data_type?: never
+      subtract?: never
+      append?: never
+      prepend?: never
     }
   | {
       /** Remove every matching value from a List attribute; a missing attribute stays undefined. */
@@ -223,19 +260,68 @@ type AttributeOperation =
       add?: never
       union?: never
       data_type?: never
+      subtract?: never
+      append?: never
+      prepend?: never
     }
 
 /**
- * Operation spellings the SDK still translates for compatibility. Each one
- * is deprecated; the SDK rewrites it and logs a warning.
+ * Operation spellings the SDK still translates for compatibility — exactly
+ * one per attribute, like `AttributeOperation`. Each one is deprecated; the
+ * SDK rewrites it and logs a warning.
  */
-interface LegacyAttributeChange {
-  /** @deprecated Use `{ add: -n }`. */
-  subtract?: number
-  /** @deprecated Use `{ union: values }` — lists are deduplicated sets. */
-  append?: AttributeLiteralOrList
-  /** @deprecated Use `{ union: values }` — list order is never observable. */
-  prepend?: AttributeLiteralOrList
+type LegacyAttributeChange =
+  | {
+      /** @deprecated Use `{ add: -n }`. */
+      subtract: number
+      append?: never
+      prepend?: never
+      set?: never
+      set_once?: never
+      add?: never
+      union?: never
+      remove?: never
+      data_type?: never
+    }
+  | {
+      /** @deprecated Use `{ union: values }` — lists are deduplicated sets. */
+      append: AttributeLiteralOrList
+      subtract?: never
+      prepend?: never
+      set?: never
+      set_once?: never
+      add?: never
+      union?: never
+      remove?: never
+      data_type?: never
+    }
+  | {
+      /** @deprecated Use `{ union: values }` — list order is never observable. */
+      prepend: AttributeLiteralOrList
+      subtract?: never
+      append?: never
+      set?: never
+      set_once?: never
+      add?: never
+      union?: never
+      remove?: never
+      data_type?: never
+    }
+
+/**
+ * What an identify / update call reports back on Usertour.js newer than
+ * v0.9.5 (Cloud always serves the newest bundle; self-hosted, it is the
+ * bundle your server serves): the write succeeded, and `rejected` names any
+ * attribute the server refused (a value that does not fit the attribute's
+ * type, an operation written incorrectly, a system-generated attribute) with
+ * the reason. Every other key was written. The SDK also logs a warning per
+ * refused attribute.
+ *
+ * An older bundle resolves these calls with `undefined`, so read the result
+ * only once your server runs a version newer than v0.9.5.
+ */
+export interface AttributesWriteResult {
+  rejected: Array<{codeName: string; reason: string}>
 }
 
 export type IdentifyOptions = {
@@ -298,7 +384,7 @@ type StringFilter = ((className: string) => boolean) | RegExp
 type StringFilters = StringFilter | StringFilter[]
 
 interface Deferred {
-  resolve: () => void
+  resolve: (value?: any) => void
   reject: (e: any) => void
 }
 
@@ -353,6 +439,29 @@ if (!usertour) {
   // Initialize the queue, which will be flushed by Usertour.js when it loads
   var q = (w.USERTOURJS_QUEUE = w.USERTOURJS_QUEUE || [])
 
+  // Whether the loader still owns the queue, i.e. no Usertour.js bundle has
+  // loaded yet. A bundle announces itself two ways, and either one ends the
+  // loader's ownership: it marks window.usertour as no longer stubbed when
+  // it installs its API, and it takes the queue over (window.USERTOURJS_QUEUE
+  // = undefined) before replaying it — unless nothing was queued, in which
+  // case older bundles leave the queue alone, which is why the mark matters.
+  // A stub still reachable under its name after that is a leftover the loaded
+  // bundle does not implement, and must warn and drop instead of enqueueing:
+  // older bundles keep leftover stubs across the API merge and replay the
+  // live array, so a call re-enqueued from inside the replay spins the main
+  // thread and grows the queue until the tab runs out of memory, and a call
+  // queued after the replay would sit in the queue forever. The check keeps
+  // every method — including ones newer than the loaded bundle — safe on
+  // every bundle version.
+  var queueOwned = function (): boolean {
+    var current = w.usertour
+    return w.USERTOURJS_QUEUE === q && !!current && current._stubbed
+  }
+
+  var warnUnsupported = function (method: keyof Usertour) {
+    console.warn('usertour.js: ' + method + ' is not supported and was ignored')
+  }
+
   /**
    * Helper to stub void-returning methods that should be queued
    */
@@ -362,23 +471,35 @@ if (!usertour) {
   ) {
     // @ts-ignore
     usertour![method] = function () {
+      if (!queueOwned()) {
+        warnUnsupported(method)
+        return
+      }
       var args = Array.prototype.slice.call(arguments)
       usertour!.load()
       q.push([method, null, args])
     } as any
   }
 
-  // Helper to stub promise-returning methods that should be queued
+  // Helper to stub promise-returning methods that should be queued. The
+  // promise settles with whatever the real method returns once the queue is
+  // replayed, so a queued identify() still resolves to its write result.
   var stubPromise = function (
     // eslint-disable-next-line es5/no-rest-parameters
-    method: ConditionalKeys<Usertour, (...args: any[]) => Promise<void>>
+    method: ConditionalKeys<Usertour, (...args: any[]) => Promise<any>>
   ) {
     // @ts-ignore
     usertour![method] = function () {
+      if (!queueOwned()) {
+        warnUnsupported(method)
+        return Promise.reject(
+          new Error('usertour.js: ' + method + ' is not supported')
+        )
+      }
       var args = Array.prototype.slice.call(arguments)
       usertour!.load()
       var deferred: Deferred
-      var promise = new Promise<void>(function (resolve, reject) {
+      var promise = new Promise<any>(function (resolve, reject) {
         deferred = {resolve: resolve, reject: reject}
       })
       q.push([method, deferred!, args])
@@ -399,20 +520,13 @@ if (!usertour) {
     }
   }
 
-  // Helper to stub legacy methods the current SDK does not implement. These
-  // must NOT queue: the SDK-side queue drain dispatches each entry to whatever
-  // hangs on window.usertour under that name, and on older SDK bundles the
-  // leftover queueing stub survives the API merge — so a queued call to an
-  // unimplemented method re-enqueued itself from inside the drain loop,
-  // spinning the main thread and growing the queue until the tab ran out of
-  // memory. Warning and dropping the call here keeps every loader/bundle
-  // version combination safe.
+  // Helper to stub legacy methods no SDK bundle implements: warn and drop
+  // without ever queueing (see queueOwned for why a queued call to a method
+  // the bundle lacks is dangerous).
   var stubUnsupported = function (method: keyof Usertour) {
     // @ts-ignore
     usertour![method] = function () {
-      console.warn(
-        'usertour.js: ' + method + ' is not supported and was ignored'
-      )
+      warnUnsupported(method)
     } as any
   }
 
@@ -424,8 +538,8 @@ if (!usertour) {
   stubVoid('registerCustomInput')
   stubVoid('reset')
   stubVoid('setBaseZIndex')
-  stubVoid('setDebug')
   stubVoid('setTargetMissingSeconds')
+  stubVoid('setDebug')
   stubVoid('setCustomNavigate')
   stubVoid('setCustomScrollIntoView')
   stubVoid('setUrlFilter')
