@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.27]
+
+- On Usertour.js newer than v0.9.7 (Cloud always serves the newest bundle; self-hosted, it is the bundle your server serves), `start` resolves to a boolean: `true` when the server started the content, `false` when it did not — the content was not found or is not published in the environment, `once` is set and the user has already seen it, or the server could not be asked (not connected, or no answer in time). Not starting is an outcome, so the promise does not reject for it. A call queued before the SDK loads resolves to the same result. An older bundle still resolves with `undefined`, so branch on the result only once your server runs a version newer than v0.9.7.
+
 ## [v0.0.26]
 
 - On Usertour.js newer than v0.9.5 (Cloud always serves the newest bundle; self-hosted, it is the bundle your server serves), `identify`, `identifyAnonymous`, `updateUser`, `group` and `updateGroup` resolve to `{ rejected }` (`AttributesWriteResult`): the attributes the server refused, each with a reason — a value that does not fit the attribute's type, or a system-generated attribute such as a Random A/B or Random number attribute. Every other attribute was written; the SDK also logs a warning per refused attribute. A call queued before the SDK loads resolves to the same result. An older bundle still resolves these calls with `undefined`, so destructure the result only once your server runs a version newer than v0.9.5.

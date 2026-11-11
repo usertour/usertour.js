@@ -74,7 +74,14 @@ export interface Usertour {
 
   isIdentified: () => boolean
 
-  start: (contentId: string, opts?: StartOptions) => Promise<void>
+  /**
+   * Resolves to `true` when the server started the content and to `false`
+   * when it did not: not found or not published, `once` and already seen, or
+   * the server could not be asked (not connected, or no answer in time). Not
+   * starting is an outcome, so the promise does not reject for it. On
+   * Usertour.js newer than v0.9.7; an older bundle resolves with `undefined`.
+   */
+  start: (contentId: string, opts?: StartOptions) => Promise<boolean>
 
   isStarted: (contentId: string) => boolean
 
