@@ -149,6 +149,13 @@ export interface Usertour {
    * clears it. Not used while a `setCustomScrollIntoView` callback is set.
    * Needs Usertour.js newer than v0.9.9; an older bundle ignores the call with
    * a warning.
+   *
+   * It applies when at least one side is a positive number and scrolling the
+   * page itself is all it takes to reach the target; it then stands in for any
+   * CSS `scroll-padding` on the page. Otherwise the browser does the scroll and
+   * keeps the page's CSS `scroll-padding` clear instead: when no side is
+   * positive (`{ top: 0 }` is the same as `null`), and when the target has to
+   * be scrolled inside a scrolling container or a frame.
    */
   setScrollPadding(scrollPadding: ScrollPadding | null): void
 
