@@ -144,7 +144,11 @@ export interface Usertour {
   setInferenceClassNameFilter(filters: StringFilters): void
 
   /**
-   * @deprecated Not supported by the current SDK — the call is ignored (a warning is logged). To control scrolling behavior, use `setCustomScrollIntoView(fn)` instead.
+   * Room to keep clear at the edges of the page when a tooltip's target is
+   * scrolled into view, e.g. `{ top: 64 }` under a fixed 64px header. `null`
+   * clears it. Not used while a `setCustomScrollIntoView` callback is set.
+   * Needs Usertour.js newer than v0.9.9; an older bundle ignores the call with
+   * a warning.
    */
   setScrollPadding(scrollPadding: ScrollPadding | null): void
 
@@ -549,6 +553,7 @@ if (!usertour) {
   stubVoid('setDebug')
   stubVoid('setCustomNavigate')
   stubVoid('setCustomScrollIntoView')
+  stubVoid('setScrollPadding')
   stubVoid('setUrlFilter')
   stubVoid('setLinkUrlDecorator')
   stubVoid('openResourceCenter')
@@ -564,7 +569,6 @@ if (!usertour) {
   stubUnsupported('setInferenceAttributeFilter')
   stubUnsupported('setInferenceAttributeNames')
   stubUnsupported('setInferenceClassNameFilter')
-  stubUnsupported('setScrollPadding')
   stubUnsupported('setServerEndpoint')
   stubUnsupported('setShadowDomEnabled')
   stubUnsupported('setPageTrackingDisabled')
