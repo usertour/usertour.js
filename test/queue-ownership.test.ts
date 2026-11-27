@@ -86,6 +86,15 @@ test('a call made before the bundle loads is queued', () => {
   expect(warn).not.toHaveBeenCalled()
 })
 
+test('setScrollPadding made before the bundle loads is queued, not dropped', () => {
+  const fakeWindow = loadLoader()
+  fakeWindow.usertour.setScrollPadding({top: 64})
+  expect(fakeWindow.USERTOURJS_QUEUE).toEqual([
+    ['setScrollPadding', null, [{top: 64}]]
+  ])
+  expect(warn).not.toHaveBeenCalled()
+})
+
 test('a bundle that implements the method replays it once', () => {
   const fakeWindow = loadLoader()
   fakeWindow.usertour.setDebug(true)
