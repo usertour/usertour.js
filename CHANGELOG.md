@@ -1,8 +1,11 @@
 # Changelog
 
-## [v0.0.27]
+## [v0.0.28]
 
 - `setScrollPadding({ top, right, bottom, left })` is supported again, on Usertour.js newer than v0.9.9 (Cloud always serves the newest bundle; self-hosted, it is the bundle your server serves): the pixels to keep clear at the page's edges when a tooltip's target is scrolled into view — the height of a fixed header, say. `null` clears it; a `setCustomScrollIntoView` callback, when set, takes over the scroll and the padding is not used. It is no longer `@deprecated`, and a call placed before the script has loaded is queued and applied on load instead of being dropped. An older bundle ignores it with a warning, as before.
+
+## [v0.0.27]
+
 - On Usertour.js newer than v0.9.7 (Cloud always serves the newest bundle; self-hosted, it is the bundle your server serves), `start` resolves to a boolean: `true` when the server started the content, `false` when it did not — the content was not found or is not published in the environment, `once` is set and the user has already seen it, or the server could not be asked (not connected, or no answer in time). Not starting is an outcome, so the promise does not reject for it. A call queued before the SDK loads resolves to the same result. An older bundle still resolves with `undefined`, so branch on the result only once your server runs a version newer than v0.9.7.
 
 ## [v0.0.26]
